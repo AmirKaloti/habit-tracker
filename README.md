@@ -1,32 +1,72 @@
-# React + TypeScript + Vite
+# HABITRON — Habit Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Ein minimalistischer Habit-Tracker im „Jarvis"-Stil (Dunkelblau, technisch).
+Gebaut mit React + TypeScript + Vite. Daten werden lokal im Browser gespeichert
+(localStorage) — kein Server, kein Account nötig.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Neuen Habit anlegen
+- Mit einem Klick den heutigen Tag abhaken
+- Streak-Counter (ununterbrochene Tage) neben jedem Habit
+- Habit bearbeiten: umbenennen
+- Kalenderansicht pro Habit: grün = erledigt, rot = verpasst, heute markiert
+- Habit löschen
+- Daten bleiben nach dem Neuladen erhalten
 
-## React Compiler
+## Starten
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Voraussetzung: [Node.js](https://nodejs.org) ist installiert.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install      # einmalig: Abhängigkeiten installieren
+npm run dev      # Entwicklungs-Server starten (http://localhost:5173)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Im Browser `http://localhost:5173` öffnen. Änderungen am Code erscheinen
+dank Hot-Reload sofort.
+
+## Weitere Befehle
+
+```bash
+npm run build    # fertige, optimierte Version nach dist/ bauen
+npm run preview  # die gebaute Version lokal testen
+```
+
+## Projektstruktur
+
+```
+src/
+├── main.tsx              React-Einstiegspunkt
+├── App.tsx               Haupt-Layout, verteilt den State an die Komponenten
+├── index.css            Globale Styles + Jarvis-Theme (Farben als CSS-Variablen)
+├── types/
+│   └── habit.ts          Die zentrale Datenstruktur (Habit)
+├── lib/                  Reine Logik, ohne React — leicht testbar
+│   ├── date.ts           Datums-Helfer (Schlüssel, Wochentage, Monate)
+│   ├── streak.ts         Streak-Berechnung
+│   └── storage.ts        Lesen/Schreiben in localStorage
+├── hooks/
+│   └── useHabits.ts      Zentraler State: add / toggle / rename / remove
+└── components/          Jede Datei = ein UI-Baustein
+    ├── Header.tsx        Logo, Datum, "New Habit"-Button
+    ├── StatsBar.tsx      Kennzahlen oben
+    ├── NewHabitForm.tsx  Eingabe für neuen Habit
+    ├── HabitList.tsx     Liste + Leerzustand
+    ├── HabitCard.tsx     Eine Habit-Zeile
+    ├── EditModal.tsx     Bearbeiten-Dialog
+    └── Calendar.tsx      Monats-Kalender
+```
+
+### Grundprinzip
+
+Logik (`lib/`) ist von der Darstellung (`components/`) getrennt. Den gesamten
+Zustand verwaltet ein einziger Hook (`useHabits`) — das ist die „eine Quelle der
+Wahrheit". Komponenten bekommen Daten und Funktionen als Props übergeben.
+
+## Mögliche nächste Schritte
+
+- Tests mit Vitest für `lib/streak.ts` und `lib/date.ts`
+- Mehrere Wochentage pro Habit als Ziel definieren
+- Backend + Login für Sync über mehrere Geräte
+- Deployment (z. B. Vercel oder Netlify)
