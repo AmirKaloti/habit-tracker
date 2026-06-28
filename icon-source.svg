@@ -1,0 +1,49 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#1a1106"/>
+      <stop offset="100%" stop-color="#0d0d0d"/>
+    </radialGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff4e6"/>
+      <stop offset="35%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- Arc reactor, centered, ~58% so it stays inside the maskable safe zone -->
+  <g transform="translate(256,256)" filter="url(#glow)">
+    <!-- outer ring -->
+    <circle r="118" fill="none" stroke="#ea580c" stroke-width="10" opacity="0.85"/>
+    <circle r="118" fill="none" stroke="#fb923c" stroke-width="3"/>
+
+    <!-- segment ticks around the ring -->
+    <g stroke="#fb923c" stroke-width="9" stroke-linecap="round" opacity="0.9">
+      <line x1="0" y1="-100" x2="0" y2="-78"/>
+      <line x1="71" y1="-71" x2="55" y2="-55"/>
+      <line x1="100" y1="0" x2="78" y2="0"/>
+      <line x1="71" y1="71" x2="55" y2="55"/>
+      <line x1="0" y1="100" x2="0" y2="78"/>
+      <line x1="-71" y1="71" x2="-55" y2="55"/>
+      <line x1="-100" y1="0" x2="-78" y2="0"/>
+      <line x1="-71" y1="-71" x2="-55" y2="-55"/>
+    </g>
+
+    <!-- inner ring -->
+    <circle r="60" fill="none" stroke="#ea580c" stroke-width="6"/>
+
+    <!-- glowing core -->
+    <circle r="42" fill="url(#core)"/>
+    <circle r="42" fill="none" stroke="#fff4e6" stroke-width="2" opacity="0.6"/>
+  </g>
+</svg>
