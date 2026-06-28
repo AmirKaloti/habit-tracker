@@ -1,6 +1,3 @@
-// Wurzelkomponente: holt den State aus useHabits und verteilt ihn an die UI-Komponenten.
-// Hält nur eine eigene UI-Entscheidung: welcher Habit gerade bearbeitet wird / ob das Formular offen ist.
-
 import { useState } from 'react'
 import { useHabits } from './hooks/useHabits'
 import { Header } from './components/Header'
@@ -8,26 +5,44 @@ import { StatsBar } from './components/StatsBar'
 import { NewHabitForm } from './components/NewHabitForm'
 import { HabitList } from './components/HabitList'
 import { EditModal } from './components/EditModal'
+import { StatsPage } from './components/StatsPage'
+
+type Tab = 'habits' | 'stats'
 
 function App() {
   const { habits, addHabit, toggleToday, renameHabit, removeHabit } = useHabits()
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<Tab>('habits')
 
   const editingHabit = habits.find((h) => h.id === editId) ?? null
 
+  function handleTabChange(tab: Tab) {
+    setActiveTab(tab)
+    if (tab === 'stats') setShowForm(false)
+  }
+
   return (
     <>
-      <Header onAddClick={() => setShowForm((v) => !v)} />
+      <Header
+        onAddClick={() => setShowForm((v) => !v)}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+      />
 
       <main className="main">
-        <StatsBar habits={habits} />
-
-        {showForm && <NewHabitForm onAdd={addHabit} onClose={() => setShowForm(false)} />}
-
-        <div className="section-label">// ACTIVE PROTOCOLS</div>
-
-        <HabitList habits={habits} onToggle={toggleToday} onEdit={setEditId} />
+        {activeTab === 'habits' ? (
+          <>
+            <StatsBar habits={habits} />
+            {showForm && (
+              <NewHabitForm onAdd={addHabit} onClose={() => setShowForm(false)} />
+            )}
+            <div className="section-label">// ACTIVE PROTOCOLS</div>
+            <HabitList habits={habits} onToggle={toggleToday} onEdit={setEditId} />
+          </>
+        ) : (
+          <StatsPage habits={habits} />
+        )}
       </main>
 
       {editingHabit && (

@@ -1,19 +1,21 @@
-// Kopfzeile: Arc-Reaktor-Logo, heutiges Datum, "New Habit"-Button.
-
 import { WEEKDAYS, mondayIndex } from '../lib/date'
+
+type Tab = 'habits' | 'stats'
 
 interface HeaderProps {
   onAddClick: () => void
+  activeTab: Tab
+  onTabChange: (tab: Tab) => void
 }
 
 function formatToday(): string {
   const now = new Date()
   const day = WEEKDAYS[mondayIndex(now)]
-  const date = now.toLocaleDateString('de-DE') // z. B. 25.06.2026
+  const date = now.toLocaleDateString('de-DE')
   return `${day} ${date}`
 }
 
-export function Header({ onAddClick }: HeaderProps) {
+export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
   return (
     <>
       <header className="header">
@@ -21,10 +23,30 @@ export function Header({ onAddClick }: HeaderProps) {
           <div className="arc" />
           <span className="logo-text">HABITRON</span>
         </div>
-        <span className="header-date">{formatToday()}</span>
-        <button className="btn-add" onClick={onAddClick}>
-          <span style={{ fontSize: 16, lineHeight: 1 }}>+</span> NEW HABIT
-        </button>
+
+        <div className="tab-nav">
+          <button
+            className={`tab-btn${activeTab === 'habits' ? ' active' : ''}`}
+            onClick={() => onTabChange('habits')}
+          >
+            HABITS
+          </button>
+          <button
+            className={`tab-btn${activeTab === 'stats' ? ' active' : ''}`}
+            onClick={() => onTabChange('stats')}
+          >
+            STATS
+          </button>
+        </div>
+
+        <div className="header-right">
+          <span className="header-date">{formatToday()}</span>
+          {activeTab === 'habits' && (
+            <button className="btn-add" onClick={onAddClick}>
+              <span style={{ fontSize: 16, lineHeight: 1 }}>+</span> NEW HABIT
+            </button>
+          )}
+        </div>
       </header>
       <div className="scan-line" />
     </>

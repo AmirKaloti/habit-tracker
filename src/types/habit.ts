@@ -5,4 +5,5 @@ export interface Habit {
   id: string
   name: string
   done: Record<string, boolean>
+  color?: string
 }

@@ -7,6 +7,17 @@ import type { Habit } from '../types/habit'
 import { loadHabits, saveHabits } from '../lib/storage'
 import { todayKey } from '../lib/date'
 
+const HABIT_COLORS = [
+  '#fb923c', // orange
+  '#e879f9', // fuchsia
+  '#60a5fa', // blue
+  '#34d399', // emerald
+  '#facc15', // yellow
+  '#a78bfa', // violet
+  '#f472b6', // pink
+  '#4ade80', // green
+]
+
 export function useHabits() {
   const [habits, setHabits] = useState<Habit[]>(() => loadHabits())
 
@@ -18,12 +29,15 @@ export function useHabits() {
   function addHabit(name: string) {
     const clean = name.trim()
     if (!clean) return
-    const habit: Habit = {
-      id: crypto.randomUUID(),
-      name: clean.toUpperCase(),
-      done: {},
-    }
-    setHabits((prev) => [...prev, habit])
+    setHabits((prev) => {
+      const habit: Habit = {
+        id: crypto.randomUUID(),
+        name: clean.toUpperCase(),
+        done: {},
+        color: HABIT_COLORS[prev.length % HABIT_COLORS.length],
+      }
+      return [...prev, habit]
+    })
   }
 
   // Hakt den heutigen Tag an/ab (toggle).
