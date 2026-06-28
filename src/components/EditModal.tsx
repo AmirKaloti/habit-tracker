@@ -8,10 +8,17 @@ interface EditModalProps {
   habit: Habit
   onRename: (id: string, name: string) => void
   onRemove: (id: string) => void
+  onToggleDay: (id: string, key: string) => void
   onClose: () => void
 }
 
-export function EditModal({ habit, onRename, onRemove, onClose }: EditModalProps) {
+export function EditModal({
+  habit,
+  onRename,
+  onRemove,
+  onToggleDay,
+  onClose,
+}: EditModalProps) {
   const [name, setName] = useState(habit.name)
 
   function save() {
@@ -59,7 +66,7 @@ export function EditModal({ habit, onRename, onRemove, onClose }: EditModalProps
 
         <div className="divider" />
 
-        <Calendar habit={habit} />
+        <Calendar habit={habit} onToggleDay={onToggleDay} />
 
         <div className="btn-row">
           <button className="j-btn" onClick={save}>

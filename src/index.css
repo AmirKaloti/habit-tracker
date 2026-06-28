@@ -558,6 +558,36 @@ body {
   border: none;
 }
 
+/* Klickbare Tage (button): wie die Anzeige-Zellen, aber mit Hover. */
+button.cal-day {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button.cal-day.missed {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text3);
+}
+button.cal-day:hover {
+  border-color: var(--accent3);
+  color: var(--accent3);
+  box-shadow: 0 0 8px rgba(251, 146, 60, 0.25);
+}
+button.cal-day.is-done:hover {
+  border-color: rgba(34, 197, 94, 0.6);
+  color: var(--success);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+}
+
+.cal-hint {
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
 .cal-legend {
   display: flex;
   gap: 18px;

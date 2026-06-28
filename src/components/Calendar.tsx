@@ -7,9 +7,10 @@ import { WEEKDAYS, MONTHS, toKey, todayKey, mondayIndex } from '../lib/date'
 
 interface CalendarProps {
   habit: Habit
+  onToggleDay: (id: string, key: string) => void
 }
 
-export function Calendar({ habit }: CalendarProps) {
+export function Calendar({ habit, onToggleDay }: CalendarProps) {
   // offset = 0 ist der aktuelle Monat, -1 der vorige usw. (Zukunft sperren wir.)
   const [offset, setOffset] = useState(0)
 
@@ -22,16 +23,20 @@ export function Calendar({ habit }: CalendarProps) {
   const firstWeekday = mondayIndex(ref) // Leerzellen vor dem 1. des Monats
   const daysInMonth = new Date(ref.getFullYear(), ref.getMonth() + 1, 0).getDate()
 
-  const cells: { key: string; cls: string; label: number }[] = []
+  const cells: { key: string; cls: string; label: number; clickable: boolean }[] = []
   for (let d = 1; d <= daysInMonth; d++) {
     const cellDate = new Date(ref.getFullYear(), ref.getMonth(), d)
     const key = toKey(cellDate)
+    const isFuture = cellDate > todayMidnight
     let cls = 'cal-day'
     if (key === today) cls += ' today'
-    else if (cellDate > todayMidnight) cls += ' future'
+    else if (isFuture) cls += ' future'
     else if (habit.done[key]) cls += ' done'
     else cls += ' missed'
-    cells.push({ key, cls, label: d })
+    // Heute und alle Tage in der Vergangenheit lassen sich an-/abklicken.
+    if (habit.done[key]) cls += ' is-done'
+    if (!isFuture) cls += ' clickable'
+    cells.push({ key, cls, label: d, clickable: !isFuture })
   }
 
   return (
@@ -66,11 +71,22 @@ export function Calendar({ habit }: CalendarProps) {
         {Array.from({ length: firstWeekday }).map((_, i) => (
           <div key={`empty-${i}`} className="cal-day empty" />
         ))}
-        {cells.map((c) => (
-          <div key={c.key} className={c.cls}>
-            {c.label}
-          </div>
-        ))}
+        {cells.map((c) =>
+          c.clickable ? (
+            <button
+              key={c.key}
+              className={c.cls}
+              onClick={() => onToggleDay(habit.id, c.key)}
+              aria-label={`${c.label}. — ${habit.done[c.key] ? 'erledigt, klicken zum Entfernen' : 'klicken zum Abhaken'}`}
+            >
+              {c.label}
+            </button>
+          ) : (
+            <div key={c.key} className={c.cls}>
+              {c.label}
+            </div>
+          ),
+        )}
       </div>
 
       <div className="cal-legend">
@@ -87,6 +103,7 @@ export function Calendar({ habit }: CalendarProps) {
           HEUTE
         </div>
       </div>
+      <div className="cal-hint">// TAG ANKLICKEN ZUM NACHTRAGEN</div>
     </div>
   )
 }

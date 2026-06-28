@@ -40,9 +40,8 @@ export function useHabits() {
     })
   }
 
-  // Hakt den heutigen Tag an/ab (toggle).
-  function toggleToday(id: string) {
-    const key = todayKey()
+  // Hakt einen beliebigen Tag (per Datums-Schlüssel "YYYY-MM-DD") an/ab.
+  function toggleDay(id: string, key: string) {
     setHabits((prev) =>
       prev.map((h) => {
         if (h.id !== id) return h
@@ -52,6 +51,11 @@ export function useHabits() {
         return { ...h, done }
       }),
     )
+  }
+
+  // Bequemer Spezialfall: den heutigen Tag an/ab.
+  function toggleToday(id: string) {
+    toggleDay(id, todayKey())
   }
 
   function renameHabit(id: string, name: string) {
@@ -66,5 +70,5 @@ export function useHabits() {
     setHabits((prev) => prev.filter((h) => h.id !== id))
   }
 
-  return { habits, addHabit, toggleToday, renameHabit, removeHabit }
+  return { habits, addHabit, toggleToday, toggleDay, renameHabit, removeHabit }
 }

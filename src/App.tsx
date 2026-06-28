@@ -10,7 +10,8 @@ import { StatsPage } from './components/StatsPage'
 type Tab = 'habits' | 'stats'
 
 function App() {
-  const { habits, addHabit, toggleToday, renameHabit, removeHabit } = useHabits()
+  const { habits, addHabit, toggleToday, toggleDay, renameHabit, removeHabit } =
+    useHabits()
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('habits')
@@ -50,6 +51,7 @@ function App() {
           habit={editingHabit}
           onRename={renameHabit}
           onRemove={removeHabit}
+          onToggleDay={toggleDay}
           onClose={() => setEditId(null)}
         />
       )}
