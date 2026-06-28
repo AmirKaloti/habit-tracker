@@ -37,10 +37,16 @@ export function Calendar({ habit }: CalendarProps) {
   return (
     <div>
       <div className="cal-header">
-        <button className="cal-nav" onClick={() => setOffset((o) => o - 1)} aria-label="Vorheriger Monat">
+        <button
+          className="cal-nav"
+          onClick={() => setOffset((o) => o - 1)}
+          aria-label="Vorheriger Monat"
+        >
           ‹
         </button>
-        <span className="cal-month">{MONTHS[ref.getMonth()]} {ref.getFullYear()}</span>
+        <span className="cal-month">
+          {MONTHS[ref.getMonth()]} {ref.getFullYear()}
+        </span>
         <button
           className="cal-nav"
           onClick={() => setOffset((o) => Math.min(0, o + 1))}
@@ -53,20 +59,33 @@ export function Calendar({ habit }: CalendarProps) {
 
       <div className="cal-grid">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="cal-day-name">{w}</div>
+          <div key={w} className="cal-day-name">
+            {w}
+          </div>
         ))}
         {Array.from({ length: firstWeekday }).map((_, i) => (
           <div key={`empty-${i}`} className="cal-day empty" />
         ))}
         {cells.map((c) => (
-          <div key={c.key} className={c.cls}>{c.label}</div>
+          <div key={c.key} className={c.cls}>
+            {c.label}
+          </div>
         ))}
       </div>
 
       <div className="cal-legend">
-        <div className="leg-item"><div className="leg-dot leg-done" />ERLEDIGT</div>
-        <div className="leg-item"><div className="leg-dot leg-miss" />VERPASST</div>
-        <div className="leg-item"><div className="leg-dot leg-today" />HEUTE</div>
+        <div className="leg-item">
+          <div className="leg-dot leg-done" />
+          ERLEDIGT
+        </div>
+        <div className="leg-item">
+          <div className="leg-dot leg-miss" />
+          VERPASST
+        </div>
+        <div className="leg-item">
+          <div className="leg-dot leg-today" />
+          HEUTE
+        </div>
       </div>
     </div>
   )

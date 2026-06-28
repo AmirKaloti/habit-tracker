@@ -23,9 +23,7 @@ function App() {
       <main className="main">
         <StatsBar habits={habits} />
 
-        {showForm && (
-          <NewHabitForm onAdd={addHabit} onClose={() => setShowForm(false)} />
-        )}
+        {showForm && <NewHabitForm onAdd={addHabit} onClose={() => setShowForm(false)} />}
 
         <div className="section-label">// ACTIVE PROTOCOLS</div>
 

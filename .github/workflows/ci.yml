@@ -1,0 +1,43 @@
+# Continuous Integration: läuft automatisch bei jedem Push und Pull Request.
+# Prüft in dieser Reihenfolge: Code-Stil, Typen, Tests, Production-Build.
+# Schlägt ein Schritt fehl, wird der Commit auf GitHub rot markiert.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Linting (oxlint)
+        run: npm run lint
+
+      - name: Formatierung prüfen (Prettier)
+        run: npm run format:check
+
+      - name: Typen prüfen (TypeScript)
+        run: npm run typecheck
+
+      - name: Tests ausführen (Vitest)
+        run: npm run test:run
+
+      - name: Production-Build
+        run: npm run build

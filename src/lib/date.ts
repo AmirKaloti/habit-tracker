@@ -16,8 +16,18 @@ export function todayKey(): string {
 // Wochentage und Monatsnamen auf Deutsch, Montag zuerst.
 export const WEEKDAYS = ['MO', 'DI', 'MI', 'DO', 'FR', 'SA', 'SO']
 export const MONTHS = [
-  'JANUAR', 'FEBRUAR', 'MÄRZ', 'APRIL', 'MAI', 'JUNI',
-  'JULI', 'AUGUST', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DEZEMBER',
+  'JANUAR',
+  'FEBRUAR',
+  'MÄRZ',
+  'APRIL',
+  'MAI',
+  'JUNI',
+  'JULI',
+  'AUGUST',
+  'SEPTEMBER',
+  'OKTOBER',
+  'NOVEMBER',
+  'DEZEMBER',
 ]
 
 // Index 0=Montag ... 6=Sonntag (JS liefert standardmäßig 0=Sonntag).

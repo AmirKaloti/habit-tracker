@@ -33,8 +33,12 @@ export function NewHabitForm({ onAdd, onClose }: NewHabitFormProps) {
             if (e.key === 'Escape') onClose()
           }}
         />
-        <button className="j-btn" onClick={submit}>ADD</button>
-        <button className="j-btn j-btn-ghost" onClick={onClose}>CANCEL</button>
+        <button className="j-btn" onClick={submit}>
+          ADD
+        </button>
+        <button className="j-btn j-btn-ghost" onClick={onClose}>
+          CANCEL
+        </button>
       </div>
     </div>
   )

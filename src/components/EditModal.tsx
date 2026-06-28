@@ -33,10 +33,17 @@ export function EditModal({ habit, onRename, onRemove, onClose }: EditModalProps
 
   return (
     <div className="overlay" onClick={onOverlayClick}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label="Habit bearbeiten">
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Habit bearbeiten"
+      >
         <div className="modal-title">
           <span>// HABIT CONFIG</span>
-          <button className="modal-close" onClick={onClose} aria-label="Schließen">✕</button>
+          <button className="modal-close" onClick={onClose} aria-label="Schließen">
+            ✕
+          </button>
         </div>
 
         <div className="field">
@@ -55,8 +62,12 @@ export function EditModal({ habit, onRename, onRemove, onClose }: EditModalProps
         <Calendar habit={habit} />
 
         <div className="btn-row">
-          <button className="j-btn" onClick={save}>SAVE CHANGES</button>
-          <button className="j-btn j-btn-danger" onClick={remove}>DELETE</button>
+          <button className="j-btn" onClick={save}>
+            SAVE CHANGES
+          </button>
+          <button className="j-btn j-btn-danger" onClick={remove}>
+            DELETE
+          </button>
         </div>
       </div>
     </div>

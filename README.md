@@ -29,9 +29,35 @@ dank Hot-Reload sofort.
 ## Weitere Befehle
 
 ```bash
-npm run build    # fertige, optimierte Version nach dist/ bauen
-npm run preview  # die gebaute Version lokal testen
+npm run build         # fertige, optimierte Version nach dist/ bauen
+npm run preview       # die gebaute Version lokal testen
+
+npm test              # Tests im Watch-Modus (Vitest)
+npm run test:run      # Tests einmal durchlaufen
+npm run coverage      # Tests + Coverage-Report (Ordner coverage/)
+
+npm run lint          # Code auf Fehler prüfen (oxlint)
+npm run format        # Code automatisch formatieren (Prettier)
+npm run typecheck     # nur die Typen prüfen, ohne zu bauen
 ```
+
+## Qualitätssicherung & Tooling
+
+Dieses Projekt nutzt denselben Prozess wie professionelle Teams:
+
+- **Tests (Vitest):** Die Logik in `src/lib/` (Streak-Berechnung, Datums-Helfer,
+  Speicherung) und die Komponenten sind durch automatische Tests abgesichert.
+  Zeit-abhängige Tests „frieren" das Datum ein (`vi.setSystemTime`), damit sie
+  reproduzierbar sind.
+- **TypeScript strict:** Maximale Typsicherheit — viele Fehler werden schon vor
+  dem Start abgefangen.
+- **oxlint:** Schneller Linter, der typische Fehlerquellen aufspürt.
+- **Prettier:** Einheitliche Code-Formatierung, automatisch.
+- **Pre-commit-Hook (Husky + lint-staged):** Vor jedem Commit werden geänderte
+  Dateien automatisch formatiert und gelintet — so kommt nie unsauberer Code ins
+  Repository.
+- **CI-Pipeline (GitHub Actions):** Bei jedem Push laufen automatisch Lint,
+  Format-Check, Typprüfung, Tests und Build (`.github/workflows/ci.yml`).
 
 ## Projektstruktur
 
@@ -66,7 +92,8 @@ Wahrheit". Komponenten bekommen Daten und Funktionen als Props übergeben.
 
 ## Mögliche nächste Schritte
 
-- Tests mit Vitest für `lib/streak.ts` und `lib/date.ts`
+- Deployment auf Vercel oder Netlify (klickbarer Live-Link)
+- Als PWA installierbar + offline-fähig machen
+- Statistik-Dashboard mit Diagrammen und Aktivitäts-Heatmap
 - Mehrere Wochentage pro Habit als Ziel definieren
 - Backend + Login für Sync über mehrere Geräte
-- Deployment (z. B. Vercel oder Netlify)

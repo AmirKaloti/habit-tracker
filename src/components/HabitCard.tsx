@@ -34,7 +34,11 @@ export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
         <div className="streak-lbl">STREAK</div>
       </div>
 
-      <button className="edit-btn" onClick={() => onEdit(habit.id)} aria-label="Habit bearbeiten">
+      <button
+        className="edit-btn"
+        onClick={() => onEdit(habit.id)}
+        aria-label="Habit bearbeiten"
+      >
         ✎
       </button>
     </div>
