@@ -1,18 +1,26 @@
-# HABITRON — Habit Tracker
+# Master Your Habit — Habit Tracker
 
-Ein minimalistischer Habit-Tracker im „Jarvis"-Stil (Dunkelblau, technisch).
-Gebaut mit React + TypeScript + Vite. Daten werden lokal im Browser gespeichert
-(localStorage) — kein Server, kein Account nötig.
+**🔗 Live-Demo:** https://habit-tracker-tau-ecru-29.vercel.app
+**📦 Code:** https://github.com/AmirKaloti/habit-tracker
+
+Ein minimalistischer Habit-Tracker im technischen „Orange/Black"-Stil.
+Gebaut mit React + TypeScript + Vite. Installierbar als App auf dem Handy (PWA),
+funktioniert offline. Daten werden lokal im Browser gespeichert (localStorage) —
+kein Server, kein Account nötig.
 
 ## Features
 
 - Neuen Habit anlegen
 - Mit einem Klick den heutigen Tag abhaken
+- Tage rückwirkend nachtragen (Kalender anklicken)
 - Streak-Counter (ununterbrochene Tage) neben jedem Habit
+- Aktivitäts-Heatmap pro Habit (52 Wochen, GitHub-Stil)
+- Statistik-Seite mit Diagrammen (Completions pro Monat)
 - Habit bearbeiten: umbenennen
-- Kalenderansicht pro Habit: grün = erledigt, rot = verpasst, heute markiert
+- Kalenderansicht pro Habit: grün = erledigt, heute markiert
 - Habit löschen
 - Daten bleiben nach dem Neuladen erhalten
+- Als App installierbar (PWA) + offline-fähig
 
 ## Starten
 

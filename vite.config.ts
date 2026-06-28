@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['apple-touch-icon.png', 'favicon-48x48.png'],
       manifest: {
-        name: 'HABITRON — Habit Tracker',
-        short_name: 'HABITRON',
-        description: 'Minimalistischer Habit-Tracker im Jarvis-Stil.',
+        name: 'Master Your Habit',
+        short_name: 'Master Habit',
+        description: 'Minimalistischer Habit-Tracker im technischen Stil.',
         theme_color: '#0d0d0d',
         background_color: '#0d0d0d',
         display: 'standalone',

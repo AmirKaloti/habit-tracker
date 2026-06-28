@@ -21,7 +21,7 @@ export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
       <header className="header">
         <div className="logo">
           <div className="arc" />
-          <span className="logo-text">HABITRON</span>
+          <span className="logo-text">MASTER YOUR HABIT</span>
         </div>
 
         <div className="tab-nav">
@@ -43,7 +43,8 @@ export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
           <span className="header-date">{formatToday()}</span>
           {activeTab === 'habits' && (
             <button className="btn-add" onClick={onAddClick}>
-              <span style={{ fontSize: 16, lineHeight: 1 }}>+</span> NEW HABIT
+              <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+              <span className="btn-add-label"> NEW HABIT</span>
             </button>
           )}
         </div>

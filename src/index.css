@@ -75,10 +75,11 @@ body {
     0 0 4px var(--accent3);
 }
 .logo-text {
-  font-size: 15px;
-  letter-spacing: 5px;
+  font-size: 14px;
+  letter-spacing: 3px;
   color: var(--accent3);
   font-weight: bold;
+  white-space: nowrap;
 }
 
 /* ── Tab navigation ───────────────────────────────────── */
@@ -742,4 +743,59 @@ button.cal-day.is-done:hover {
   font-size: 16px;
   color: var(--text2);
   text-align: center;
+}
+
+/* ── Handy / schmale Bildschirme ──────────────────────── */
+@media (max-width: 600px) {
+  .header {
+    padding: 12px 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  /* Tabs rutschen in eine eigene zweite Zeile, zentriert */
+  .tab-nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+  }
+  .logo-text {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+  }
+  .arc {
+    width: 24px;
+    height: 24px;
+  }
+  /* Datum auf dem Handy ausblenden, um Platz zu sparen */
+  .header-date {
+    display: none;
+  }
+  .tab-btn {
+    padding: 6px 12px;
+  }
+  .btn-add {
+    padding: 7px 9px;
+    font-size: 14px;
+  }
+  /* Auf dem Handy nur das "+" zeigen, spart Platz im Header */
+  .btn-add-label {
+    display: none;
+  }
+  .main {
+    padding: 18px 12px;
+  }
+  .stat-num {
+    font-size: 20px;
+  }
+  .stat-lbl {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .stat-num-big {
+    font-size: 30px;
+  }
+  /* Safe-Area bei iPhones mit Notch berücksichtigen */
+  body {
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+  }
 }
