@@ -222,8 +222,8 @@ body {
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 10px;
+  padding: 10px 16px;
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
   transition: all 0.2s;
@@ -309,7 +309,7 @@ body {
   flex-shrink: 0;
 }
 .streak-num {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: bold;
   color: var(--habit-color, var(--accent3));
   line-height: 1;
@@ -745,19 +745,30 @@ button.cal-day.is-done:hover {
   text-align: center;
 }
 
-/* ── Completion-Rate (in der Habit-Karte) ─────────────── */
-.habit-rate {
-  margin-top: 9px;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--text3);
+/* ── Heatmap-Sektion (Stats-Seite) ────────────────────── */
+.heatmap-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
 }
-.rate-num {
-  font-weight: bold;
+.heatmap-block-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 12px;
+  letter-spacing: 1px;
 }
-.rate-msg {
-  font-weight: bold;
+.heatmap-block-name {
+  color: var(--text);
+}
+.heatmap-block-total {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text3);
 }
 
 /* ── Drafts-Seite ─────────────────────────────────────── */

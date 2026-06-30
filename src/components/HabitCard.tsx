@@ -3,20 +3,11 @@ import type { Habit } from '../types/habit'
 import { todayKey } from '../lib/date'
 import { currentStreak } from '../lib/streak'
 import { completionRate } from '../lib/stats'
-import { HabitHeatmap } from './HabitHeatmap'
 
 interface HabitCardProps {
   habit: Habit
   onToggle: (id: string) => void
   onEdit: (id: string) => void
-}
-
-function encouragement(pct: number): string {
-  if (pct >= 90) return 'STARK!'
-  if (pct >= 70) return 'WEITER SO'
-  if (pct >= 40) return 'DRANBLEIBEN'
-  if (pct > 0) return 'GUTER START'
-  return 'LEG LOS'
 }
 
 export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
@@ -42,7 +33,10 @@ export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
 
         <div className="habit-info">
           <div className="habit-name">{habit.name}</div>
-          <div className="habit-sub">{done ? '✓ HEUTE ERLEDIGT' : '— AUSSTEHEND'}</div>
+          <div className="habit-sub">
+            {done ? '✓ HEUTE ERLEDIGT' : '— AUSSTEHEND'} · {rate.done}/{rate.total} ·{' '}
+            {pct}%
+          </div>
         </div>
 
         <div className="habit-streak">
@@ -57,21 +51,6 @@ export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
         >
           ✎
         </button>
-      </div>
-
-      <HabitHeatmap habit={habit} />
-
-      <div className="habit-rate">
-        <span className="rate-num" style={{ color }}>
-          {rate.done}/{rate.total}
-        </span>
-        <span className="rate-text">
-          {' '}
-          in den letzten {rate.total} Tagen · {pct}% ·{' '}
-        </span>
-        <span className="rate-msg" style={{ color }}>
-          {encouragement(pct)}
-        </span>
       </div>
     </div>
   )

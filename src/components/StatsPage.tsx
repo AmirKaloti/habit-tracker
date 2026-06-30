@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Habit } from '../types/habit'
 import { completionsPerMonth, totalCompletions } from '../lib/stats'
 import { currentStreak, bestStreak } from '../lib/streak'
+import { HabitHeatmap } from './HabitHeatmap'
 
 interface Props {
   habits: Habit[]
@@ -61,6 +62,28 @@ export function StatsPage({ habits }: Props) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+
+      {habits.length > 0 && (
+        <div className="heatmap-section">
+          <div className="chart-title">// AKTIVITÄT — LETZTE 52 WOCHEN</div>
+          {habits.map((habit) => {
+            const rate = Object.keys(habit.done).length
+            return (
+              <div key={habit.id} className="heatmap-block">
+                <div className="heatmap-block-head">
+                  <span
+                    className="table-color-dot"
+                    style={{ background: habit.color ?? '#fb923c' }}
+                  />
+                  <span className="heatmap-block-name">{habit.name}</span>
+                  <span className="heatmap-block-total">{rate}× erledigt</span>
+                </div>
+                <HabitHeatmap habit={habit} />
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       {habits.length > 0 && (
         <div className="habits-table">
