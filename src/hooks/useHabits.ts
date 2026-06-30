@@ -26,7 +26,8 @@ export function useHabits() {
     saveHabits(habits)
   }, [habits])
 
-  function addHabit(name: string) {
+  // Legt einen Habit an. `active = false` macht ihn zu einem Entwurf (Draft).
+  function addHabit(name: string, active = true) {
     const clean = name.trim()
     if (!clean) return
     setHabits((prev) => {
@@ -35,9 +36,20 @@ export function useHabits() {
         name: clean.toUpperCase(),
         done: {},
         color: HABIT_COLORS[prev.length % HABIT_COLORS.length],
+        active,
       }
       return [...prev, habit]
     })
+  }
+
+  // Legt eine Habit-Idee an, die noch nicht aktiv ist (erscheint unter "Drafts").
+  function addDraft(name: string) {
+    addHabit(name, false)
+  }
+
+  // Verschiebt einen Entwurf zu den aktiven Habits.
+  function activateHabit(id: string) {
+    setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, active: true } : h)))
   }
 
   // Hakt einen beliebigen Tag (per Datums-Schlüssel "YYYY-MM-DD") an/ab.
@@ -70,5 +82,14 @@ export function useHabits() {
     setHabits((prev) => prev.filter((h) => h.id !== id))
   }
 
-  return { habits, addHabit, toggleToday, toggleDay, renameHabit, removeHabit }
+  return {
+    habits,
+    addHabit,
+    addDraft,
+    activateHabit,
+    toggleToday,
+    toggleDay,
+    renameHabit,
+    removeHabit,
+  }
 }

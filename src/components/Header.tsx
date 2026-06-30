@@ -1,6 +1,6 @@
 import { WEEKDAYS, mondayIndex } from '../lib/date'
 
-type Tab = 'habits' | 'stats'
+export type Tab = 'active' | 'stats' | 'drafts'
 
 interface HeaderProps {
   onAddClick: () => void
@@ -15,6 +15,12 @@ function formatToday(): string {
   return `${day} ${date}`
 }
 
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'active', label: 'ACTIVE' },
+  { id: 'stats', label: 'STATS' },
+  { id: 'drafts', label: 'DRAFTS' },
+]
+
 export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
   return (
     <>
@@ -25,23 +31,20 @@ export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
         </div>
 
         <div className="tab-nav">
-          <button
-            className={`tab-btn${activeTab === 'habits' ? ' active' : ''}`}
-            onClick={() => onTabChange('habits')}
-          >
-            HABITS
-          </button>
-          <button
-            className={`tab-btn${activeTab === 'stats' ? ' active' : ''}`}
-            onClick={() => onTabChange('stats')}
-          >
-            STATS
-          </button>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`tab-btn${activeTab === tab.id ? ' active' : ''}`}
+              onClick={() => onTabChange(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         <div className="header-right">
           <span className="header-date">{formatToday()}</span>
-          {activeTab === 'habits' && (
+          {activeTab === 'active' && (
             <button className="btn-add" onClick={onAddClick}>
               <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
               <span className="btn-add-label"> NEW HABIT</span>

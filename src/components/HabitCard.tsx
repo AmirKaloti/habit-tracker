@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import type { Habit } from '../types/habit'
 import { todayKey } from '../lib/date'
 import { currentStreak } from '../lib/streak'
+import { completionRate } from '../lib/stats'
 import { HabitHeatmap } from './HabitHeatmap'
 
 interface HabitCardProps {
@@ -10,10 +11,20 @@ interface HabitCardProps {
   onEdit: (id: string) => void
 }
 
+function encouragement(pct: number): string {
+  if (pct >= 90) return 'STARK!'
+  if (pct >= 70) return 'WEITER SO'
+  if (pct >= 40) return 'DRANBLEIBEN'
+  if (pct > 0) return 'GUTER START'
+  return 'LEG LOS'
+}
+
 export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
   const done = !!habit.done[todayKey()]
   const streak = currentStreak(habit)
   const color = habit.color ?? '#fb923c'
+  const rate = completionRate(habit, 30)
+  const pct = Math.round((rate.done / rate.total) * 100)
 
   return (
     <div
@@ -49,6 +60,19 @@ export function HabitCard({ habit, onToggle, onEdit }: HabitCardProps) {
       </div>
 
       <HabitHeatmap habit={habit} />
+
+      <div className="habit-rate">
+        <span className="rate-num" style={{ color }}>
+          {rate.done}/{rate.total}
+        </span>
+        <span className="rate-text">
+          {' '}
+          in den letzten {rate.total} Tagen · {pct}% ·{' '}
+        </span>
+        <span className="rate-msg" style={{ color }}>
+          {encouragement(pct)}
+        </span>
+      </div>
     </div>
   )
 }

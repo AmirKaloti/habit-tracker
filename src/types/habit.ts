@@ -6,4 +6,6 @@ export interface Habit {
   name: string
   done: Record<string, boolean>
   color?: string
+  // undefined oder true = aktiver Habit; false = Entwurf/Idee (Draft), noch nicht aktiv.
+  active?: boolean
 }

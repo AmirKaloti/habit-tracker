@@ -1,8 +1,27 @@
 import type { Habit } from '../types/habit'
+import { toKey } from './date'
 
 export interface MonthStat {
   label: string
   completions: number
+}
+
+export interface Rate {
+  done: number
+  total: number
+}
+
+// Wie oft wurde der Habit in den letzten `days` Tagen (heute eingeschlossen) erledigt?
+// Reine Funktion -> leicht testbar. Gibt z. B. { done: 27, total: 30 } zurück.
+export function completionRate(habit: Habit, days = 30): Rate {
+  let done = 0
+  const cursor = new Date()
+  cursor.setHours(0, 0, 0, 0)
+  for (let i = 0; i < days; i++) {
+    if (habit.done[toKey(cursor)]) done++
+    cursor.setDate(cursor.getDate() - 1)
+  }
+  return { done, total: days }
 }
 
 export function completionsPerMonth(habits: Habit[]): MonthStat[] {

@@ -14,8 +14,11 @@ kein Server, kein Account nötig.
 - Mit einem Klick den heutigen Tag abhaken
 - Tage rückwirkend nachtragen (Kalender anklicken)
 - Streak-Counter (ununterbrochene Tage) neben jedem Habit
+- Completion-Rate pro Habit (z. B. „27/30 in den letzten 30 Tagen") mit Motivations-Text
 - Aktivitäts-Heatmap pro Habit (52 Wochen, GitHub-Stil)
 - Statistik-Seite mit Diagrammen (Completions pro Monat)
+- Drei Bereiche: ACTIVE (aktive Habits), STATS (Statistiken), DRAFTS (Ideen-Speicher)
+- Habit-Ideen als Entwürfe sammeln und später aktivieren
 - Habit bearbeiten: umbenennen
 - Kalenderansicht pro Habit: grün = erledigt, heute markiert
 - Habit löschen
