@@ -198,15 +198,59 @@ body {
   margin-bottom: 14px;
 }
 
-.section-row {
+/* ── Kategorie-Gruppe (aufklappbar) ───────────────────── */
+.cat-group {
+  margin-bottom: 10px;
+}
+.cat-header {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cat-color, var(--accent));
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
 }
-.section-row .section-label {
-  margin-bottom: 0;
+.cat-header:hover {
+  background: var(--bg3);
+  border-color: var(--border2);
+}
+.cat-chevron {
+  color: var(--cat-color, var(--accent3));
+  font-size: 10px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.cat-header.open .cat-chevron {
+  transform: rotate(90deg);
+}
+.cat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cat-color, var(--accent));
+  flex-shrink: 0;
+}
+.cat-name {
+  font-size: 13px;
+  color: var(--text);
+  letter-spacing: 1px;
+  flex: 1;
+  text-align: left;
+}
+.cat-count {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.cat-body {
+  padding: 10px 0 4px 16px;
 }
 
 /* ── New Habit Form ───────────────────────────────────── */
@@ -369,8 +413,30 @@ body {
   border-color: var(--habit-color, var(--border2));
   color: var(--habit-color, var(--accent3));
 }
+.yesterday-btn.flash {
+  border-color: var(--success);
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--success) 45%, transparent);
+  animation: yesterday-pop 0.4s ease;
+}
+@keyframes yesterday-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
-.habit-category-tag {
+.week-goal {
+  color: var(--text2);
+}
+.week-goal.reached {
+  color: var(--success);
   font-weight: bold;
 }
 
@@ -420,9 +486,31 @@ body {
   cursor: pointer;
   padding: 9px 10px;
 }
-.category-filter {
-  max-width: 220px;
+
+/* ── Daten sichern (Export/Import) ────────────────────── */
+.backup-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+}
+.backup-hint {
   font-size: 11px;
+  line-height: 1.6;
+  color: var(--text3);
+  letter-spacing: 0.5px;
+  margin: 8px 0 12px;
+}
+.backup-row {
+  display: flex;
+  gap: 10px;
+}
+.backup-msg {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text2);
 }
 
 .j-btn {

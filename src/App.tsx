@@ -5,10 +5,11 @@ import type { Tab } from './components/Header'
 import { StatsBar } from './components/StatsBar'
 import { NewHabitForm } from './components/NewHabitForm'
 import { HabitList } from './components/HabitList'
+import { CategoryGroup } from './components/CategoryGroup'
 import { EditModal } from './components/EditModal'
 import { StatsPage } from './components/StatsPage'
 import { DraftsPage } from './components/DraftsPage'
-import { CategoryFilter } from './components/CategoryFilter'
+import { CATEGORIES } from './lib/categories'
 
 function App() {
   const {
@@ -20,19 +21,24 @@ function App() {
     toggleDay,
     markYesterday,
     renameHabit,
+    setWeeklyGoal,
     removeHabit,
+    replaceAll,
   } = useHabits()
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('active')
-  const [categoryFilter, setCategoryFilter] = useState('')
 
   // Aktive Habits vs. Entwürfe (Drafts) trennen.
   const activeHabits = habits.filter((h) => h.active !== false)
   const draftHabits = habits.filter((h) => h.active === false)
-  const visibleHabits = categoryFilter
-    ? activeHabits.filter((h) => h.category === categoryFilter)
-    : activeHabits
+
+  // Aktive Habits nach Kategorie gruppieren; Habits ohne Kategorie bleiben einzeln.
+  const groups = CATEGORIES.map((cat) => ({
+    cat,
+    habits: activeHabits.filter((h) => h.category === cat.id),
+  })).filter((g) => g.habits.length > 0)
+  const uncategorized = activeHabits.filter((h) => !h.category)
 
   const editingHabit = habits.find((h) => h.id === editId) ?? null
 
@@ -59,20 +65,43 @@ function App() {
                 onClose={() => setShowForm(false)}
               />
             )}
-            <div className="section-row">
-              <div className="section-label">// ACTIVE PROTOCOLS</div>
-              <CategoryFilter value={categoryFilter} onChange={setCategoryFilter} />
-            </div>
-            <HabitList
-              habits={visibleHabits}
-              onToggle={toggleToday}
-              onEdit={setEditId}
-              onMarkYesterday={markYesterday}
-            />
+            <div className="section-label">// ACTIVE PROTOCOLS</div>
+
+            {activeHabits.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">◎</div>
+                <div className="empty-text">
+                  KEINE HABITS — KLICKE "NEW HABIT" ZUM STARTEN
+                </div>
+              </div>
+            ) : (
+              <>
+                {groups.map((g) => (
+                  <CategoryGroup
+                    key={g.cat.id}
+                    category={g.cat}
+                    habits={g.habits}
+                    onToggle={toggleToday}
+                    onEdit={setEditId}
+                    onMarkYesterday={markYesterday}
+                  />
+                ))}
+                {uncategorized.length > 0 && (
+                  <HabitList
+                    habits={uncategorized}
+                    onToggle={toggleToday}
+                    onEdit={setEditId}
+                    onMarkYesterday={markYesterday}
+                  />
+                )}
+              </>
+            )}
           </>
         )}
 
-        {activeTab === 'stats' && <StatsPage habits={activeHabits} />}
+        {activeTab === 'stats' && (
+          <StatsPage habits={activeHabits} allHabits={habits} onImport={replaceAll} />
+        )}
 
         {activeTab === 'drafts' && (
           <DraftsPage
@@ -90,6 +119,7 @@ function App() {
           onRename={renameHabit}
           onRemove={removeHabit}
           onToggleDay={toggleDay}
+          onSetWeeklyGoal={setWeeklyGoal}
           onClose={() => setEditId(null)}
         />
       )}

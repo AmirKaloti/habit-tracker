@@ -32,42 +32,8 @@ function colorFor(existing: Habit[], category?: string): string {
   return HABIT_COLORS[uncategorized % HABIT_COLORS.length]
 }
 
-const SEED_FLAG = 'habitron_seeded_categories_v1'
-
-// Legt beim allerersten Start ein paar Beispiel-Habits mit Kategorie an — nur
-// einmal (Flag im localStorage) und nur, wenn der Name noch nicht existiert.
-function seedCategoryHabits(existing: Habit[]): Habit[] {
-  if (localStorage.getItem(SEED_FLAG)) return existing
-  localStorage.setItem(SEED_FLAG, '1')
-
-  const toSeed: Array<{ name: string; category: string }> = [
-    { name: 'KEIN HANDY AUF TOILETTE', category: 'distraction' },
-    {
-      name: 'BECOMING A MOVIE WATCHER RATHER THAN A YT WATCHER - MOVIE GEG',
-      category: 'distraction',
-    },
-    { name: 'VITAMIN D', category: 'health' },
-    { name: 'OMEGA 3 + MAGNESIUM', category: 'health' },
-  ]
-
-  const existingNames = new Set(existing.map((h) => h.name))
-  const added: Habit[] = []
-  for (const item of toSeed) {
-    if (existingNames.has(item.name)) continue
-    added.push({
-      id: crypto.randomUUID(),
-      name: item.name,
-      done: {},
-      color: colorFor([...existing, ...added], item.category),
-      active: true,
-      category: item.category,
-    })
-  }
-  return [...existing, ...added]
-}
-
 export function useHabits() {
-  const [habits, setHabits] = useState<Habit[]>(() => seedCategoryHabits(loadHabits()))
+  const [habits, setHabits] = useState<Habit[]>(() => loadHabits())
 
   // Jedes Mal wenn sich `habits` ändert, in den localStorage schreiben.
   useEffect(() => {
@@ -137,8 +103,26 @@ export function useHabits() {
     )
   }
 
+  // Setzt (oder entfernt) das Wochenziel. 0 / undefined = kein Ziel.
+  function setWeeklyGoal(id: string, goal: number | undefined) {
+    setHabits((prev) =>
+      prev.map((h) => {
+        if (h.id !== id) return h
+        const next = { ...h }
+        if (goal && goal > 0) next.weeklyGoal = goal
+        else delete next.weeklyGoal
+        return next
+      }),
+    )
+  }
+
   function removeHabit(id: string) {
     setHabits((prev) => prev.filter((h) => h.id !== id))
+  }
+
+  // Ersetzt ALLE Habits (für den Import einer Backup-Datei).
+  function replaceAll(next: Habit[]) {
+    setHabits(next)
   }
 
   return {
@@ -150,6 +134,8 @@ export function useHabits() {
     toggleDay,
     markYesterday,
     renameHabit,
+    setWeeklyGoal,
     removeHabit,
+    replaceAll,
   }
 }

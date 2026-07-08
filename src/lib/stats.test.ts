@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { completionRate } from './stats'
+import { completionRate, weeklyProgress } from './stats'
 import { toKey } from './date'
 import type { Habit } from '../types/habit'
 
@@ -44,5 +44,30 @@ describe('completionRate', () => {
   it('respektiert einen kürzeren Zeitraum', () => {
     const habit = makeHabit([0, 1, 5])
     expect(completionRate(habit, 3)).toEqual({ done: 2, total: 3 })
+  })
+})
+
+// TODAY (25.6.2026) ist ein Donnerstag -> Montag dieser Woche ist 3 Tage zurück.
+describe('weeklyProgress', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(TODAY)
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('zählt erledigte Tage seit Montag dieser Woche', () => {
+    // heute (Do) + gestern (Mi)
+    expect(weeklyProgress(makeHabit([0, 1]))).toBe(2)
+  })
+
+  it('ignoriert Tage aus der letzten Woche', () => {
+    // 4 Tage zurück liegt vor Montag (der 3 Tage zurück ist)
+    expect(weeklyProgress(makeHabit([4]))).toBe(0)
+  })
+
+  it('gibt 0 zurück, wenn nichts erledigt wurde', () => {
+    expect(weeklyProgress(makeHabit([]))).toBe(0)
   })
 })

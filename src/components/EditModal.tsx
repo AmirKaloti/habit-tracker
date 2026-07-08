@@ -9,6 +9,7 @@ interface EditModalProps {
   onRename: (id: string, name: string) => void
   onRemove: (id: string) => void
   onToggleDay: (id: string, key: string) => void
+  onSetWeeklyGoal: (id: string, goal: number | undefined) => void
   onClose: () => void
 }
 
@@ -17,12 +18,16 @@ export function EditModal({
   onRename,
   onRemove,
   onToggleDay,
+  onSetWeeklyGoal,
   onClose,
 }: EditModalProps) {
   const [name, setName] = useState(habit.name)
+  const [goal, setGoal] = useState(habit.weeklyGoal ? String(habit.weeklyGoal) : '')
 
   function save() {
     onRename(habit.id, name)
+    const parsed = parseInt(goal, 10)
+    onSetWeeklyGoal(habit.id, Number.isFinite(parsed) ? parsed : undefined)
     onClose()
   }
 
@@ -60,6 +65,21 @@ export function EditModal({
             style={{ width: '100%' }}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && save()}
+          />
+        </div>
+
+        <div className="field">
+          <div className="field-lbl">WOCHENZIEL (MAL PRO WOCHE, 0 = KEINS)</div>
+          <input
+            className="j-input"
+            style={{ width: '100%' }}
+            type="number"
+            min={0}
+            max={7}
+            placeholder="z. B. 5"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && save()}
           />
         </div>

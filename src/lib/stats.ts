@@ -1,5 +1,5 @@
 import type { Habit } from '../types/habit'
-import { toKey } from './date'
+import { toKey, mondayIndex } from './date'
 
 export interface MonthStat {
   label: string
@@ -58,4 +58,19 @@ export function completionsPerMonth(habits: Habit[]): MonthStat[] {
 
 export function totalCompletions(habits: Habit[]): number {
   return habits.reduce((sum, h) => sum + Object.keys(h.done).length, 0)
+}
+
+// Wie oft wurde der Habit in DIESER Woche (Montag bis heute) erledigt?
+// Reine Funktion -> leicht testbar. Für die Wochenziel-Anzeige.
+export function weeklyProgress(habit: Habit): number {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const daysSinceMonday = mondayIndex(today) // 0 = Montag
+  let done = 0
+  const cursor = new Date(today)
+  for (let i = 0; i <= daysSinceMonday; i++) {
+    if (habit.done[toKey(cursor)]) done++
+    cursor.setDate(cursor.getDate() - 1)
+  }
+  return done
 }

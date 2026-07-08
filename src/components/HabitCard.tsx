@@ -1,9 +1,9 @@
+import { useState, useRef, useEffect } from 'react'
 import type { CSSProperties } from 'react'
 import type { Habit } from '../types/habit'
 import { todayKey } from '../lib/date'
 import { currentStreak } from '../lib/streak'
-import { completionRate } from '../lib/stats'
-import { categoryById } from '../lib/categories'
+import { completionRate, weeklyProgress } from '../lib/stats'
 
 interface HabitCardProps {
   habit: Habit
@@ -18,7 +18,19 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
   const color = habit.color ?? '#fb923c'
   const rate = completionRate(habit, 30)
   const pct = Math.round((rate.done / rate.total) * 100)
-  const category = categoryById(habit.category)
+  const weekDone = weeklyProgress(habit)
+
+  // Kleine Bestätigungs-Animation für den "GESTERN"-Button.
+  const [flashYesterday, setFlashYesterday] = useState(false)
+  const timer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  function handleYesterday() {
+    onMarkYesterday(habit.id)
+    setFlashYesterday(true)
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setFlashYesterday(false), 800)
+  }
 
   return (
     <div
@@ -39,12 +51,14 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
           <div className="habit-sub">
             {done ? '✓ HEUTE ERLEDIGT' : '— AUSSTEHEND'} · {rate.done}/{rate.total} ·{' '}
             {pct}%
-            {category && (
-              <span className="habit-category-tag" style={{ color: category.color }}>
+            {habit.weeklyGoal ? (
+              <span
+                className={`week-goal${weekDone >= habit.weeklyGoal ? ' reached' : ''}`}
+              >
                 {' '}
-                · {category.name.toUpperCase()}
+                · 🎯 {weekDone}/{habit.weeklyGoal} diese Woche
               </span>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -54,11 +68,11 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
         </div>
 
         <button
-          className="yesterday-btn"
-          onClick={() => onMarkYesterday(habit.id)}
+          className={`yesterday-btn${flashYesterday ? ' flash' : ''}`}
+          onClick={handleYesterday}
           title="Hab ich gestern schon gemacht"
         >
-          GESTERN
+          {flashYesterday ? '✓ GESTERN' : 'GESTERN'}
         </button>
 
         <button

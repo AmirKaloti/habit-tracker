@@ -11,4 +11,7 @@ export interface Habit {
   // Kategorie-ID (siehe lib/categories.ts). Optional — ohne Kategorie erscheint
   // der Habit ganz normal auf der Startseite.
   category?: string
+  // Wochenziel: wie oft pro Woche der Habit erledigt werden soll (z. B. 5).
+  // Optional — ohne Wert wird kein Wochenziel angezeigt.
+  weeklyGoal?: number
 }

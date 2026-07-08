@@ -4,12 +4,15 @@ import type { Habit } from '../types/habit'
 import { completionsPerMonth, totalCompletions } from '../lib/stats'
 import { currentStreak, bestStreak } from '../lib/streak'
 import { HabitHeatmap } from './HabitHeatmap'
+import { DataBackup } from './DataBackup'
 
 interface Props {
   habits: Habit[]
+  allHabits: Habit[]
+  onImport: (habits: Habit[]) => void
 }
 
-export function StatsPage({ habits }: Props) {
+export function StatsPage({ habits, allHabits, onImport }: Props) {
   const chartData = useMemo(() => completionsPerMonth(habits), [habits])
   const total = useMemo(() => totalCompletions(habits), [habits])
   const best = bestStreak(habits)
@@ -118,6 +121,8 @@ export function StatsPage({ habits }: Props) {
           <div className="empty-text">// KEINE DATEN — ERST HABITS ANLEGEN</div>
         </div>
       )}
+
+      <DataBackup habits={allHabits} onImport={onImport} />
     </div>
   )
 }
