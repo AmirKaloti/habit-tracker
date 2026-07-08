@@ -7,9 +7,10 @@ interface HabitListProps {
   habits: Habit[]
   onToggle: (id: string) => void
   onEdit: (id: string) => void
+  onMarkYesterday: (id: string) => void
 }
 
-export function HabitList({ habits, onToggle, onEdit }: HabitListProps) {
+export function HabitList({ habits, onToggle, onEdit, onMarkYesterday }: HabitListProps) {
   if (habits.length === 0) {
     return (
       <div className="empty-state">
@@ -22,7 +23,13 @@ export function HabitList({ habits, onToggle, onEdit }: HabitListProps) {
   return (
     <div>
       {habits.map((h) => (
-        <HabitCard key={h.id} habit={h} onToggle={onToggle} onEdit={onEdit} />
+        <HabitCard
+          key={h.id}
+          habit={h}
+          onToggle={onToggle}
+          onEdit={onEdit}
+          onMarkYesterday={onMarkYesterday}
+        />
       ))}
     </div>
   )

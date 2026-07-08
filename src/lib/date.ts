@@ -13,6 +13,13 @@ export function todayKey(): string {
   return toKey(new Date())
 }
 
+// Schlüssel für gestern.
+export function yesterdayKey(): string {
+  const d = new Date()
+  d.setDate(d.getDate() - 1)
+  return toKey(d)
+}
+
 // Wochentage und Monatsnamen auf Deutsch, Montag zuerst.
 export const WEEKDAYS = ['MO', 'DI', 'MI', 'DO', 'FR', 'SA', 'SO']
 export const MONTHS = [

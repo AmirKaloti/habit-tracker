@@ -1,19 +1,22 @@
 // Eingabeformular für einen neuen Habit. Wird über den Header ein-/ausgeklappt.
 
 import { useState } from 'react'
+import { CATEGORIES } from '../lib/categories'
 
 interface NewHabitFormProps {
-  onAdd: (name: string) => void
+  onAdd: (name: string, category?: string) => void
   onClose: () => void
 }
 
 export function NewHabitForm({ onAdd, onClose }: NewHabitFormProps) {
   const [name, setName] = useState('')
+  const [category, setCategory] = useState('')
 
   function submit() {
     if (!name.trim()) return
-    onAdd(name)
+    onAdd(name, category || undefined)
     setName('')
+    setCategory('')
     onClose()
   }
 
@@ -33,6 +36,19 @@ export function NewHabitForm({ onAdd, onClose }: NewHabitFormProps) {
             if (e.key === 'Escape') onClose()
           }}
         />
+        <select
+          className="j-input j-select"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          aria-label="Kategorie"
+        >
+          <option value="">KEINE KATEGORIE</option>
+          {CATEGORIES.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name.toUpperCase()}
+            </option>
+          ))}
+        </select>
         <button className="j-btn" onClick={submit}>
           ADD
         </button>

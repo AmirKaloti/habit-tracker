@@ -8,6 +8,7 @@ import { HabitList } from './components/HabitList'
 import { EditModal } from './components/EditModal'
 import { StatsPage } from './components/StatsPage'
 import { DraftsPage } from './components/DraftsPage'
+import { CategoryFilter } from './components/CategoryFilter'
 
 function App() {
   const {
@@ -17,16 +18,21 @@ function App() {
     activateHabit,
     toggleToday,
     toggleDay,
+    markYesterday,
     renameHabit,
     removeHabit,
   } = useHabits()
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('active')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   // Aktive Habits vs. Entwürfe (Drafts) trennen.
   const activeHabits = habits.filter((h) => h.active !== false)
   const draftHabits = habits.filter((h) => h.active === false)
+  const visibleHabits = categoryFilter
+    ? activeHabits.filter((h) => h.category === categoryFilter)
+    : activeHabits
 
   const editingHabit = habits.find((h) => h.id === editId) ?? null
 
@@ -48,10 +54,21 @@ function App() {
           <>
             <StatsBar habits={activeHabits} />
             {showForm && (
-              <NewHabitForm onAdd={addHabit} onClose={() => setShowForm(false)} />
+              <NewHabitForm
+                onAdd={(name, category) => addHabit(name, true, category)}
+                onClose={() => setShowForm(false)}
+              />
             )}
-            <div className="section-label">// ACTIVE PROTOCOLS</div>
-            <HabitList habits={activeHabits} onToggle={toggleToday} onEdit={setEditId} />
+            <div className="section-row">
+              <div className="section-label">// ACTIVE PROTOCOLS</div>
+              <CategoryFilter value={categoryFilter} onChange={setCategoryFilter} />
+            </div>
+            <HabitList
+              habits={visibleHabits}
+              onToggle={toggleToday}
+              onEdit={setEditId}
+              onMarkYesterday={markYesterday}
+            />
           </>
         )}
 

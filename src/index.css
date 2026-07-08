@@ -198,6 +198,17 @@ body {
   margin-bottom: 14px;
 }
 
+.section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.section-row .section-label {
+  margin-bottom: 0;
+}
+
 /* ── New Habit Form ───────────────────────────────────── */
 .new-form {
   background: var(--bg3);
@@ -340,6 +351,29 @@ body {
   color: var(--accent3);
 }
 
+.yesterday-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  padding: 5px 9px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.yesterday-btn:hover {
+  border-color: var(--habit-color, var(--border2));
+  color: var(--habit-color, var(--accent3));
+}
+
+.habit-category-tag {
+  font-weight: bold;
+}
+
 /* ── Heatmap ──────────────────────────────────────────── */
 .heatmap {
   display: grid;
@@ -380,6 +414,15 @@ body {
 }
 .j-input::placeholder {
   color: var(--text3);
+}
+
+.j-select {
+  cursor: pointer;
+  padding: 9px 10px;
+}
+.category-filter {
+  max-width: 220px;
+  font-size: 11px;
 }
 
 .j-btn {
