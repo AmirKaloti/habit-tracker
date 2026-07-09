@@ -94,9 +94,26 @@ export function useHabits() {
     setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, color } : h)))
   }
 
-  // Sortiert per Drag & Drop: verschiebt `fromId` vor `toId`.
+  // Sortiert per Drag & Drop: verschiebt `fromId` vor `toId` UND übernimmt
+  // dabei die Kategorie von `toId` — so landet ein hierher gezogener Habit
+  // automatisch in derselben Kategorie (oder wird kategorielos, wenn `toId`
+  // selbst keine Kategorie hat).
   function moveHabit(fromId: string, toId: string) {
-    setHabits((prev) => moveBefore(prev, fromId, toId))
+    setHabits((prev) => {
+      const target = prev.find((h) => h.id === toId)
+      const reordered = moveBefore(prev, fromId, toId)
+      if (!target) return reordered
+      return reordered.map((h) =>
+        h.id === fromId ? { ...h, category: target.category } : h,
+      )
+    })
+  }
+
+  // Weist einem Habit direkt eine Kategorie zu (oder entfernt sie mit
+  // undefined) — für den Kategorie-Header als Drop-Ziel und die
+  // "vorhandenen Habit verschieben"-Auswahl.
+  function setCategory(id: string, category: string | undefined) {
+    setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, category } : h)))
   }
 
   // Setzt (oder entfernt) das Wochenziel. 0 / undefined = kein Ziel.
@@ -131,6 +148,7 @@ export function useHabits() {
     toggleYesterday,
     renameHabit,
     setColor,
+    setCategory,
     setWeeklyGoal,
     moveHabit,
     removeHabit,

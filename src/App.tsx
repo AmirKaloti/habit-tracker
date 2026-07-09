@@ -23,6 +23,7 @@ function App() {
     toggleYesterday,
     renameHabit,
     setColor,
+    setCategory,
     setWeeklyGoal,
     moveHabit,
     removeHabit,
@@ -39,10 +40,12 @@ function App() {
   const draftHabits = habits.filter((h) => h.active === false)
 
   // Aktive Habits nach Kategorie gruppieren; Habits ohne Kategorie bleiben einzeln.
+  // Kategorien werden IMMER gezeigt (auch leer) — sonst gäbe es kein Drop-Ziel,
+  // um den ersten Habit per Drag & Drop hineinzuziehen.
   const groups = CATEGORIES.map((cat) => ({
     cat,
     habits: activeHabits.filter((h) => h.category === cat.id),
-  })).filter((g) => g.habits.length > 0)
+  }))
   const uncategorized = activeHabits.filter((h) => !h.category)
 
   const editingHabit = habits.find((h) => h.id === editId) ?? null
@@ -80,6 +83,7 @@ function App() {
                     key={g.cat.id}
                     category={g.cat}
                     habits={g.habits}
+                    allActiveHabits={activeHabits}
                     open={!!openCats[g.cat.id]}
                     onOpenChange={(open) =>
                       setOpenCats((prev) => ({ ...prev, [g.cat.id]: open }))
@@ -89,6 +93,7 @@ function App() {
                     onToggleYesterday={toggleYesterday}
                     onReorder={moveHabit}
                     onAddHabit={(name, category) => addHabit(name, true, category)}
+                    onMoveIn={(id) => setCategory(id, g.cat.id)}
                   />
                 ))}
                 {uncategorized.length > 0 && (

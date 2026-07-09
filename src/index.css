@@ -218,6 +218,11 @@ body {
   background: var(--bg3);
   border-color: var(--border2);
 }
+.cat-header.drag-over {
+  background: var(--bg3);
+  border-color: var(--cat-color, var(--accent2));
+  box-shadow: 0 0 0 1px var(--cat-color, var(--accent2)) inset;
+}
 .cat-toggle {
   flex: 1;
   display: flex;
@@ -255,10 +260,26 @@ body {
 .cat-add-btn:hover {
   background: color-mix(in srgb, var(--cat-color, var(--accent)) 18%, transparent);
 }
+.cat-add-panel {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .cat-add-form {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+}
+.cat-move-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-move-lbl {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  flex-shrink: 0;
 }
 .cat-dot {
   width: 10px;
@@ -349,17 +370,26 @@ body {
 .drag-handle {
   cursor: grab;
   color: var(--text3);
-  font-size: 16px;
+  font-size: 22px;
   line-height: 1;
   flex-shrink: 0;
   user-select: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -4px 0;
 }
 .drag-handle:hover {
   color: var(--habit-color, var(--accent3));
+  background: rgba(255, 255, 255, 0.06);
 }
 .drag-handle:active {
   cursor: grabbing;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .check-btn {
