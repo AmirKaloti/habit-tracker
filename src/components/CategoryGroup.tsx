@@ -14,6 +14,7 @@ interface CategoryGroupProps {
   onToggle: (id: string) => void
   onEdit: (id: string) => void
   onMarkYesterday: (id: string) => void
+  onReorder: (fromId: string, toId: string) => void
 }
 
 export function CategoryGroup({
@@ -22,6 +23,7 @@ export function CategoryGroup({
   onToggle,
   onEdit,
   onMarkYesterday,
+  onReorder,
 }: CategoryGroupProps) {
   const [open, setOpen] = useState(false)
   const today = todayKey()
@@ -52,6 +54,7 @@ export function CategoryGroup({
               onToggle={onToggle}
               onEdit={onEdit}
               onMarkYesterday={onMarkYesterday}
+              onReorder={onReorder}
             />
           ))}
         </div>

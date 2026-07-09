@@ -1,18 +1,26 @@
 import { useState, useRef, useEffect } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, DragEvent } from 'react'
 import type { Habit } from '../types/habit'
 import { todayKey } from '../lib/date'
 import { currentStreak } from '../lib/streak'
 import { completionRate, weeklyProgress } from '../lib/stats'
+import { WeeklyRing } from './WeeklyRing'
 
 interface HabitCardProps {
   habit: Habit
   onToggle: (id: string) => void
   onEdit: (id: string) => void
   onMarkYesterday: (id: string) => void
+  onReorder: (fromId: string, toId: string) => void
 }
 
-export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCardProps) {
+export function HabitCard({
+  habit,
+  onToggle,
+  onEdit,
+  onMarkYesterday,
+  onReorder,
+}: HabitCardProps) {
   const done = !!habit.done[todayKey()]
   const streak = currentStreak(habit)
   const color = habit.color ?? '#fb923c'
@@ -25,6 +33,9 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
   const timer = useRef<number | undefined>(undefined)
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
+  // Drag & Drop zum Sortieren.
+  const [dragOver, setDragOver] = useState(false)
+
   function handleYesterday() {
     onMarkYesterday(habit.id)
     setFlashYesterday(true)
@@ -32,12 +43,41 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
     timer.current = window.setTimeout(() => setFlashYesterday(false), 800)
   }
 
+  function handleDragStart(e: DragEvent) {
+    e.dataTransfer.setData('text/plain', habit.id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+  function handleDragOver(e: DragEvent) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (!dragOver) setDragOver(true)
+  }
+  function handleDrop(e: DragEvent) {
+    e.preventDefault()
+    setDragOver(false)
+    const fromId = e.dataTransfer.getData('text/plain')
+    if (fromId && fromId !== habit.id) onReorder(fromId, habit.id)
+  }
+
   return (
     <div
-      className={`habit-card${done ? ' done' : ''}`}
+      className={`habit-card${done ? ' done' : ''}${dragOver ? ' drag-over' : ''}`}
       style={{ '--habit-color': color } as CSSProperties}
+      onDragOver={handleDragOver}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={handleDrop}
     >
       <div className="habit-card-top">
+        <span
+          className="drag-handle"
+          draggable
+          onDragStart={handleDragStart}
+          title="Zum Sortieren ziehen"
+          aria-label="Zum Sortieren ziehen"
+        >
+          ⠿
+        </span>
+
         <button
           className={`check-btn${done ? ' done' : ''}`}
           onClick={() => onToggle(habit.id)}
@@ -51,16 +91,12 @@ export function HabitCard({ habit, onToggle, onEdit, onMarkYesterday }: HabitCar
           <div className="habit-sub">
             {done ? '✓ HEUTE ERLEDIGT' : '— AUSSTEHEND'} · {rate.done}/{rate.total} ·{' '}
             {pct}%
-            {habit.weeklyGoal ? (
-              <span
-                className={`week-goal${weekDone >= habit.weeklyGoal ? ' reached' : ''}`}
-              >
-                {' '}
-                · 🎯 {weekDone}/{habit.weeklyGoal} diese Woche
-              </span>
-            ) : null}
           </div>
         </div>
+
+        {habit.weeklyGoal ? (
+          <WeeklyRing done={weekDone} goal={habit.weeklyGoal} color={color} />
+        ) : null}
 
         <div className="habit-streak">
           <div className="streak-num">{streak}</div>

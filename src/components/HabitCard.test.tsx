@@ -14,6 +14,7 @@ describe('HabitCard', () => {
         onToggle={vi.fn()}
         onEdit={vi.fn()}
         onMarkYesterday={vi.fn()}
+        onReorder={vi.fn()}
       />,
     )
     expect(screen.getByText('SPORT')).toBeInTheDocument()
@@ -28,6 +29,7 @@ describe('HabitCard', () => {
         onToggle={onToggle}
         onEdit={vi.fn()}
         onMarkYesterday={vi.fn()}
+        onReorder={vi.fn()}
       />,
     )
 
@@ -44,6 +46,7 @@ describe('HabitCard', () => {
         onToggle={vi.fn()}
         onEdit={onEdit}
         onMarkYesterday={vi.fn()}
+        onReorder={vi.fn()}
       />,
     )
 
@@ -60,6 +63,7 @@ describe('HabitCard', () => {
         onToggle={vi.fn()}
         onEdit={vi.fn()}
         onMarkYesterday={onMarkYesterday}
+        onReorder={vi.fn()}
       />,
     )
 

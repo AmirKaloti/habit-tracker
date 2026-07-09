@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { Habit } from '../types/habit'
 import { Calendar } from './Calendar'
+import { HABIT_COLORS } from '../lib/palette'
 
 interface EditModalProps {
   habit: Habit
@@ -10,6 +11,7 @@ interface EditModalProps {
   onRemove: (id: string) => void
   onToggleDay: (id: string, key: string) => void
   onSetWeeklyGoal: (id: string, goal: number | undefined) => void
+  onSetColor: (id: string, color: string) => void
   onClose: () => void
 }
 
@@ -19,15 +21,18 @@ export function EditModal({
   onRemove,
   onToggleDay,
   onSetWeeklyGoal,
+  onSetColor,
   onClose,
 }: EditModalProps) {
   const [name, setName] = useState(habit.name)
   const [goal, setGoal] = useState(habit.weeklyGoal ? String(habit.weeklyGoal) : '')
+  const [color, setColor] = useState(habit.color ?? '#fb923c')
 
   function save() {
     onRename(habit.id, name)
     const parsed = parseInt(goal, 10)
     onSetWeeklyGoal(habit.id, Number.isFinite(parsed) ? parsed : undefined)
+    onSetColor(habit.id, color)
     onClose()
   }
 
@@ -82,6 +87,30 @@ export function EditModal({
             onChange={(e) => setGoal(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && save()}
           />
+        </div>
+
+        <div className="field">
+          <div className="field-lbl">FARBE</div>
+          <div className="color-swatches">
+            {HABIT_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`swatch${color.toLowerCase() === c.toLowerCase() ? ' sel' : ''}`}
+                style={{ background: c }}
+                onClick={() => setColor(c)}
+                aria-label={`Farbe ${c}`}
+              />
+            ))}
+            <label className="swatch-custom" title="Eigene Farbe wählen">
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                aria-label="Eigene Farbe"
+              />
+            </label>
+          </div>
         </div>
 
         <div className="divider" />

@@ -8,17 +8,8 @@ import { loadHabits, saveHabits } from '../lib/storage'
 import { todayKey, yesterdayKey } from '../lib/date'
 import { categoryById } from '../lib/categories'
 import { shade } from '../lib/color'
-
-const HABIT_COLORS = [
-  '#fb923c', // orange
-  '#e879f9', // fuchsia
-  '#60a5fa', // blue
-  '#34d399', // emerald
-  '#facc15', // yellow
-  '#a78bfa', // violet
-  '#f472b6', // pink
-  '#4ade80', // green
-]
+import { moveBefore } from '../lib/reorder'
+import { HABIT_COLORS } from '../lib/palette'
 
 // Bestimmt die Farbe für einen neuen Habit: mit Kategorie eine Farbvariante der
 // Kategorie-Basisfarbe, ohne Kategorie die nächste Farbe aus der Standard-Palette.
@@ -103,6 +94,16 @@ export function useHabits() {
     )
   }
 
+  // Ändert die Farbe eines Habits (Farb-Wähler im Bearbeiten-Dialog).
+  function setColor(id: string, color: string) {
+    setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, color } : h)))
+  }
+
+  // Sortiert per Drag & Drop: verschiebt `fromId` vor `toId`.
+  function moveHabit(fromId: string, toId: string) {
+    setHabits((prev) => moveBefore(prev, fromId, toId))
+  }
+
   // Setzt (oder entfernt) das Wochenziel. 0 / undefined = kein Ziel.
   function setWeeklyGoal(id: string, goal: number | undefined) {
     setHabits((prev) =>
@@ -134,7 +135,9 @@ export function useHabits() {
     toggleDay,
     markYesterday,
     renameHabit,
+    setColor,
     setWeeklyGoal,
+    moveHabit,
     removeHabit,
     replaceAll,
   }

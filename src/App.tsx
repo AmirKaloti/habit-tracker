@@ -9,6 +9,7 @@ import { CategoryGroup } from './components/CategoryGroup'
 import { EditModal } from './components/EditModal'
 import { StatsPage } from './components/StatsPage'
 import { DraftsPage } from './components/DraftsPage'
+import { Onboarding } from './components/Onboarding'
 import { CATEGORIES } from './lib/categories'
 
 function App() {
@@ -21,7 +22,9 @@ function App() {
     toggleDay,
     markYesterday,
     renameHabit,
+    setColor,
     setWeeklyGoal,
+    moveHabit,
     removeHabit,
     replaceAll,
   } = useHabits()
@@ -65,17 +68,11 @@ function App() {
                 onClose={() => setShowForm(false)}
               />
             )}
-            <div className="section-label">// ACTIVE PROTOCOLS</div>
-
             {activeHabits.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon">◎</div>
-                <div className="empty-text">
-                  KEINE HABITS — KLICKE "NEW HABIT" ZUM STARTEN
-                </div>
-              </div>
+              <Onboarding onStart={() => setShowForm(true)} />
             ) : (
               <>
+                <div className="section-label">// ACTIVE PROTOCOLS</div>
                 {groups.map((g) => (
                   <CategoryGroup
                     key={g.cat.id}
@@ -84,6 +81,7 @@ function App() {
                     onToggle={toggleToday}
                     onEdit={setEditId}
                     onMarkYesterday={markYesterday}
+                    onReorder={moveHabit}
                   />
                 ))}
                 {uncategorized.length > 0 && (
@@ -92,6 +90,7 @@ function App() {
                     onToggle={toggleToday}
                     onEdit={setEditId}
                     onMarkYesterday={markYesterday}
+                    onReorder={moveHabit}
                   />
                 )}
               </>
@@ -120,6 +119,7 @@ function App() {
           onRemove={removeHabit}
           onToggleDay={toggleDay}
           onSetWeeklyGoal={setWeeklyGoal}
+          onSetColor={setColor}
           onClose={() => setEditId(null)}
         />
       )}

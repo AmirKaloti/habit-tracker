@@ -8,9 +8,16 @@ interface HabitListProps {
   onToggle: (id: string) => void
   onEdit: (id: string) => void
   onMarkYesterday: (id: string) => void
+  onReorder: (fromId: string, toId: string) => void
 }
 
-export function HabitList({ habits, onToggle, onEdit, onMarkYesterday }: HabitListProps) {
+export function HabitList({
+  habits,
+  onToggle,
+  onEdit,
+  onMarkYesterday,
+  onReorder,
+}: HabitListProps) {
   if (habits.length === 0) {
     return (
       <div className="empty-state">
@@ -29,6 +36,7 @@ export function HabitList({ habits, onToggle, onEdit, onMarkYesterday }: HabitLi
           onToggle={onToggle}
           onEdit={onEdit}
           onMarkYesterday={onMarkYesterday}
+          onReorder={onReorder}
         />
       ))}
     </div>
