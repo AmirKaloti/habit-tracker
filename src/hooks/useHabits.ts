@@ -76,14 +76,9 @@ export function useHabits() {
     toggleDay(id, todayKey())
   }
 
-  // Schnellzugriff "hab ich gestern gemacht": setzt gestern auf erledigt
-  // (im Gegensatz zu toggleDay wird hier nicht abgewählt).
-  function markYesterday(id: string) {
-    setHabits((prev) =>
-      prev.map((h) =>
-        h.id === id ? { ...h, done: { ...h.done, [yesterdayKey()]: true } } : h,
-      ),
-    )
+  // Schnellzugriff "hab ich gestern gemacht": schaltet den gestrigen Tag an/ab.
+  function toggleYesterday(id: string) {
+    toggleDay(id, yesterdayKey())
   }
 
   function renameHabit(id: string, name: string) {
@@ -133,7 +128,7 @@ export function useHabits() {
     activateHabit,
     toggleToday,
     toggleDay,
-    markYesterday,
+    toggleYesterday,
     renameHabit,
     setColor,
     setWeeklyGoal,

@@ -4,6 +4,7 @@ import type { Habit } from '../types/habit'
 import { completionsPerMonth, totalCompletions } from '../lib/stats'
 import { currentStreak, bestStreak } from '../lib/streak'
 import { HabitHeatmap } from './HabitHeatmap'
+import { RecentDays } from './RecentDays'
 import { DataBackup } from './DataBackup'
 
 interface Props {
@@ -65,6 +66,24 @@ export function StatsPage({ habits, allHabits, onImport }: Props) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+
+      {habits.length > 0 && (
+        <div className="heatmap-section">
+          <div className="chart-title">// LETZTE 7 TAGE</div>
+          {habits.map((habit) => (
+            <div key={habit.id} className="recent-block">
+              <div className="heatmap-block-head">
+                <span
+                  className="table-color-dot"
+                  style={{ background: habit.color ?? '#fb923c' }}
+                />
+                <span className="heatmap-block-name">{habit.name}</span>
+              </div>
+              <RecentDays habit={habit} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {habits.length > 0 && (
         <div className="heatmap-section">

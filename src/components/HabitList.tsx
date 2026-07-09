@@ -7,7 +7,7 @@ interface HabitListProps {
   habits: Habit[]
   onToggle: (id: string) => void
   onEdit: (id: string) => void
-  onMarkYesterday: (id: string) => void
+  onToggleYesterday: (id: string) => void
   onReorder: (fromId: string, toId: string) => void
 }
 
@@ -15,7 +15,7 @@ export function HabitList({
   habits,
   onToggle,
   onEdit,
-  onMarkYesterday,
+  onToggleYesterday,
   onReorder,
 }: HabitListProps) {
   if (habits.length === 0) {
@@ -35,7 +35,7 @@ export function HabitList({
           habit={h}
           onToggle={onToggle}
           onEdit={onEdit}
-          onMarkYesterday={onMarkYesterday}
+          onToggleYesterday={onToggleYesterday}
           onReorder={onReorder}
         />
       ))}

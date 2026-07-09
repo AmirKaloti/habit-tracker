@@ -20,7 +20,7 @@ function App() {
     activateHabit,
     toggleToday,
     toggleDay,
-    markYesterday,
+    toggleYesterday,
     renameHabit,
     setColor,
     setWeeklyGoal,
@@ -31,6 +31,8 @@ function App() {
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('active')
+  // Auf/Zu-Zustand der Kategorie-Gruppen — bleibt beim Tab-Wechsel erhalten.
+  const [openCats, setOpenCats] = useState<Record<string, boolean>>({})
 
   // Aktive Habits vs. Entwürfe (Drafts) trennen.
   const activeHabits = habits.filter((h) => h.active !== false)
@@ -78,10 +80,15 @@ function App() {
                     key={g.cat.id}
                     category={g.cat}
                     habits={g.habits}
+                    open={!!openCats[g.cat.id]}
+                    onOpenChange={(open) =>
+                      setOpenCats((prev) => ({ ...prev, [g.cat.id]: open }))
+                    }
                     onToggle={toggleToday}
                     onEdit={setEditId}
-                    onMarkYesterday={markYesterday}
+                    onToggleYesterday={toggleYesterday}
                     onReorder={moveHabit}
+                    onAddHabit={(name, category) => addHabit(name, true, category)}
                   />
                 ))}
                 {uncategorized.length > 0 && (
@@ -89,7 +96,7 @@ function App() {
                     habits={uncategorized}
                     onToggle={toggleToday}
                     onEdit={setEditId}
-                    onMarkYesterday={markYesterday}
+                    onToggleYesterday={toggleYesterday}
                     onReorder={moveHabit}
                   />
                 )}

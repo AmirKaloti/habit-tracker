@@ -206,19 +206,29 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   background: var(--bg2);
   border: 1px solid var(--border);
   border-left: 3px solid var(--cat-color, var(--accent));
   border-radius: var(--radius);
-  padding: 12px 16px;
-  cursor: pointer;
-  font-family: inherit;
+  padding: 6px 10px 6px 13px;
   transition: all 0.2s;
 }
 .cat-header:hover {
   background: var(--bg3);
   border-color: var(--border2);
+}
+.cat-toggle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 6px 0;
+  min-width: 0;
 }
 .cat-chevron {
   color: var(--cat-color, var(--accent3));
@@ -226,8 +236,29 @@ body {
   transition: transform 0.2s;
   flex-shrink: 0;
 }
-.cat-header.open .cat-chevron {
+.cat-toggle.open .cat-chevron {
   transform: rotate(90deg);
+}
+.cat-add-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--cat-color, var(--border2));
+  background: transparent;
+  color: var(--cat-color, var(--accent3));
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cat-add-btn:hover {
+  background: color-mix(in srgb, var(--cat-color, var(--accent)) 18%, transparent);
+}
+.cat-add-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 .cat-dot {
   width: 10px;
@@ -433,6 +464,12 @@ body {
 .yesterday-btn:hover {
   border-color: var(--habit-color, var(--border2));
   color: var(--habit-color, var(--accent3));
+}
+/* Dauerhaft grün, wenn gestern bereits erledigt wurde. */
+.yesterday-btn.done {
+  border-color: var(--success);
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, transparent);
 }
 .yesterday-btn.flash {
   border-color: var(--success);
@@ -1041,6 +1078,51 @@ button.cal-day.is-done:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* ── Letzte 7 Tage (Schnellübersicht) ─────────────────── */
+.recent-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recent-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.rd-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.rd-lbl {
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+.rd-box {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 40px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0d0d0d;
+  font-size: 14px;
+  font-weight: bold;
+}
+.rd-box.today {
+  outline: 1.5px solid var(--text2);
+  outline-offset: 1px;
+}
+.rd-num {
+  font-size: 9px;
+  color: var(--text3);
 }
 .heatmap-block-head {
   display: flex;

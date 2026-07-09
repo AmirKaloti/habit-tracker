@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { CSSProperties, DragEvent } from 'react'
 import type { Habit } from '../types/habit'
-import { todayKey } from '../lib/date'
+import { todayKey, yesterdayKey } from '../lib/date'
 import { currentStreak } from '../lib/streak'
 import { completionRate, weeklyProgress } from '../lib/stats'
 import { WeeklyRing } from './WeeklyRing'
@@ -10,7 +10,7 @@ interface HabitCardProps {
   habit: Habit
   onToggle: (id: string) => void
   onEdit: (id: string) => void
-  onMarkYesterday: (id: string) => void
+  onToggleYesterday: (id: string) => void
   onReorder: (fromId: string, toId: string) => void
 }
 
@@ -18,10 +18,11 @@ export function HabitCard({
   habit,
   onToggle,
   onEdit,
-  onMarkYesterday,
+  onToggleYesterday,
   onReorder,
 }: HabitCardProps) {
   const done = !!habit.done[todayKey()]
+  const yesterdayDone = !!habit.done[yesterdayKey()]
   const streak = currentStreak(habit)
   const color = habit.color ?? '#fb923c'
   const rate = completionRate(habit, 30)
@@ -37,10 +38,13 @@ export function HabitCard({
   const [dragOver, setDragOver] = useState(false)
 
   function handleYesterday() {
-    onMarkYesterday(habit.id)
-    setFlashYesterday(true)
-    window.clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => setFlashYesterday(false), 800)
+    onToggleYesterday(habit.id)
+    // Nur beim Markieren (nicht beim Abwählen) pulsieren.
+    if (!yesterdayDone) {
+      setFlashYesterday(true)
+      window.clearTimeout(timer.current)
+      timer.current = window.setTimeout(() => setFlashYesterday(false), 800)
+    }
   }
 
   function handleDragStart(e: DragEvent) {
@@ -104,11 +108,17 @@ export function HabitCard({
         </div>
 
         <button
-          className={`yesterday-btn${flashYesterday ? ' flash' : ''}`}
+          className={`yesterday-btn${yesterdayDone ? ' done' : ''}${
+            flashYesterday ? ' flash' : ''
+          }`}
           onClick={handleYesterday}
-          title="Hab ich gestern schon gemacht"
+          title={
+            yesterdayDone
+              ? 'Gestern erledigt — Klick zum Rückgängigmachen'
+              : 'Hab ich gestern schon gemacht'
+          }
         >
-          {flashYesterday ? '✓ GESTERN' : 'GESTERN'}
+          {yesterdayDone ? '✓ GESTERN' : 'GESTERN'}
         </button>
 
         <button
