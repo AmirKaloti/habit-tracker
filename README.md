@@ -6,7 +6,8 @@
 Ein minimalistischer Habit-Tracker im technischen „Orange/Black"-Stil.
 Gebaut mit React + TypeScript + Vite. Installierbar als App auf dem Handy (PWA),
 funktioniert offline. Daten werden lokal im Browser gespeichert (localStorage) —
-kein Server, kein Account nötig.
+optional zusätzlich in der Cloud (Supabase), wenn man sich per Magic Link einloggt.
+Login ist nie Pflicht: "Ohne Login weitermachen" funktioniert genau wie bisher.
 
 ## Features
 
@@ -24,6 +25,9 @@ kein Server, kein Account nötig.
 - Habit löschen
 - Daten bleiben nach dem Neuladen erhalten
 - Als App installierbar (PWA) + offline-fähig
+- Kategorien (aufklappbare Gruppen), Wochenziele, Drag & Drop zum Sortieren/Umkategorisieren
+- Export/Import als JSON-Datei (Backup)
+- Optionaler Login (Magic Link) für Cloud-Sync über mehrere Geräte hinweg
 
 ## Starten
 
@@ -36,6 +40,32 @@ npm run dev      # Entwicklungs-Server starten (http://localhost:5173)
 
 Im Browser `http://localhost:5173` öffnen. Änderungen am Code erscheinen
 dank Hot-Reload sofort.
+
+## Cloud-Sync einrichten (optional)
+
+Ohne weitere Schritte läuft die App komplett lokal (wie bisher). Für Login +
+Sync über mehrere Geräte:
+
+1. Kostenloses Projekt auf [supabase.com](https://supabase.com) anlegen.
+2. Im SQL-Editor des Projekts folgendes einfügen und ausführen:
+   ```sql
+   create table habit_data (
+     user_id uuid primary key references auth.users(id) on delete cascade,
+     habits jsonb not null default '[]',
+     updated_at timestamptz not null default now()
+   );
+   alter table habit_data enable row level security;
+   create policy "user reads own data" on habit_data for select using (auth.uid() = user_id);
+   create policy "user writes own data" on habit_data for all using (auth.uid() = user_id);
+   ```
+3. Unter **Project Settings → API** die **Project URL** und den **anon public
+   key** kopieren.
+4. `.env.example` zu `.env.local` kopieren und beide Werte eintragen.
+5. Dev-Server neu starten (`npm run dev`) — jetzt erscheint beim Start ein
+   Login-Bildschirm (Magic Link per E-Mail).
+6. Für die Produktion (Vercel): dieselben zwei Werte unter _Project Settings →
+   Environment Variables_ eintragen, und in Supabase unter _Auth → URL
+   Configuration_ die Vercel-Domain als erlaubte Redirect-URL hinzufügen.
 
 ## Weitere Befehle
 
@@ -82,11 +112,15 @@ src/
 ├── lib/                  Reine Logik, ohne React — leicht testbar
 │   ├── date.ts           Datums-Helfer (Schlüssel, Wochentage, Monate)
 │   ├── streak.ts         Streak-Berechnung
-│   └── storage.ts        Lesen/Schreiben in localStorage
+│   ├── storage.ts        Lesen/Schreiben in localStorage (+ Sicherheitsnetz-Backup)
+│   ├── cloudStorage.ts   Lesen/Schreiben in Supabase (eine Zeile pro Nutzer)
+│   └── supabase.ts       Supabase-Client (aus Umgebungsvariablen)
 ├── hooks/
-│   └── useHabits.ts      Zentraler State: add / toggle / rename / remove
+│   ├── useHabits.ts      Zentraler State: add / toggle / rename / remove / Cloud-Sync
+│   └── useAuth.ts        Login-Status (Magic Link), signIn/signOut
 └── components/          Jede Datei = ein UI-Baustein
-    ├── Header.tsx        Logo, Datum, "New Habit"-Button
+    ├── Header.tsx        Logo, Datum, "New Habit"-Button, Login/Logout
+    ├── LoginScreen.tsx   Login-Bildschirm (Magic Link)
     ├── StatsBar.tsx      Kennzahlen oben
     ├── NewHabitForm.tsx  Eingabe für neuen Habit
     ├── HabitList.tsx     Liste + Leerzustand
@@ -103,8 +137,8 @@ Wahrheit". Komponenten bekommen Daten und Funktionen als Props übergeben.
 
 ## Mögliche nächste Schritte
 
-- Deployment auf Vercel oder Netlify (klickbarer Live-Link)
-- Als PWA installierbar + offline-fähig machen
-- Statistik-Dashboard mit Diagrammen und Aktivitäts-Heatmap
-- Mehrere Wochentage pro Habit als Ziel definieren
-- Backend + Login für Sync über mehrere Geräte
+- Tägliche Erinnerung (Browser-Push)
+- Jahres-Rückblick ("Year in Pixels")
+- Habit-Vorlagen beim Anlegen
+- Kleine Einblicke (z. B. stärkster Wochentag)
+- Theme-Umschalter (hell/dunkel)

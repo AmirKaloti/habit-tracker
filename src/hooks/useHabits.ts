@@ -1,10 +1,13 @@
 // Zentraler State-Hook: EINE Quelle der Wahrheit für alle Habits.
 // Liest beim Start aus dem localStorage und speichert bei jeder Änderung automatisch.
-// Komponenten rufen useHabits() auf und bekommen Daten + Aktionen.
+// Ist ein Nutzer eingeloggt (userId übergeben), wird zusätzlich mit der Cloud
+// synchronisiert (siehe lib/cloudStorage.ts) — localStorage bleibt dabei immer als
+// Offline-Cache und Sicherheitsnetz aktiv.
 
 import { useEffect, useState } from 'react'
 import type { Habit } from '../types/habit'
 import { loadHabits, saveHabits } from '../lib/storage'
+import { loadHabitsCloud, saveHabitsCloud } from '../lib/cloudStorage'
 import { todayKey, yesterdayKey } from '../lib/date'
 import { categoryById } from '../lib/categories'
 import { shade } from '../lib/color'
@@ -23,13 +26,61 @@ function colorFor(existing: Habit[], category?: string): string {
   return HABIT_COLORS[uncategorized % HABIT_COLORS.length]
 }
 
-export function useHabits() {
+export function useHabits(userId?: string) {
   const [habits, setHabits] = useState<Habit[]>(() => loadHabits())
+  // Wird true, sobald der erste Cloud-Ladevorgang für den aktuellen Nutzer
+  // abgeschlossen ist — erst dann darf automatisch in die Cloud gespeichert werden.
+  const [cloudReady, setCloudReady] = useState(false)
+  // Kurzer Hinweis: "frischer Account, lokale Daten wurden übernommen".
+  const [justSynced, setJustSynced] = useState(false)
+
+  // Beim Einloggen (oder Nutzerwechsel) einmalig aus der Cloud laden.
+  useEffect(() => {
+    if (!userId) {
+      setCloudReady(false)
+      return
+    }
+    let cancelled = false
+    setCloudReady(false)
+    loadHabitsCloud(userId).then((cloudHabits) => {
+      if (cancelled) return
+      if (cloudHabits === null) {
+        // Laden fehlgeschlagen (z. B. Netzwerkfehler) — lokale Daten unangetastet
+        // lassen und NICHT synchronisieren, um nichts zu riskieren.
+        return
+      }
+      if (cloudHabits.length > 0) {
+        setHabits(cloudHabits)
+      } else {
+        // Frischer Account ohne Cloud-Daten -> die vorhandenen lokalen Daten
+        // werden gleich (siehe Speicher-Effekt unten) automatisch hochgeladen.
+        setJustSynced(true)
+      }
+      setCloudReady(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
 
   // Jedes Mal wenn sich `habits` ändert, in den localStorage schreiben.
   useEffect(() => {
     saveHabits(habits)
   }, [habits])
+
+  // Zusätzlich (debounced) in die Cloud schreiben, sobald eingeloggt und der
+  // erste Ladevorgang durch ist.
+  useEffect(() => {
+    if (!userId || !cloudReady) return
+    const timer = window.setTimeout(() => {
+      saveHabitsCloud(userId, habits)
+    }, 1000)
+    return () => window.clearTimeout(timer)
+  }, [habits, userId, cloudReady])
+
+  function dismissSyncHint() {
+    setJustSynced(false)
+  }
 
   // Legt einen Habit an. `active = false` macht ihn zu einem Entwurf (Draft).
   function addHabit(name: string, active = true, category?: string) {
@@ -140,6 +191,8 @@ export function useHabits() {
 
   return {
     habits,
+    justSynced,
+    dismissSyncHint,
     addHabit,
     addDraft,
     activateHabit,

@@ -6,6 +6,12 @@ interface HeaderProps {
   onAddClick: () => void
   activeTab: Tab
   onTabChange: (tab: Tab) => void
+  // Cloud-Sync-Status — cloudEnabled ist false, solange kein Supabase-Projekt
+  // eingerichtet ist (dann wird hier gar nichts Auth-bezogenes angezeigt).
+  cloudEnabled: boolean
+  userEmail?: string | null
+  onLoginClick?: () => void
+  onLogoutClick?: () => void
 }
 
 function formatToday(): string {
@@ -21,7 +27,15 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'drafts', label: 'DRAFTS' },
 ]
 
-export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
+export function Header({
+  onAddClick,
+  activeTab,
+  onTabChange,
+  cloudEnabled,
+  userEmail,
+  onLoginClick,
+  onLogoutClick,
+}: HeaderProps) {
   return (
     <>
       <header className="header">
@@ -43,6 +57,25 @@ export function Header({ onAddClick, activeTab, onTabChange }: HeaderProps) {
         </div>
 
         <div className="header-right">
+          {cloudEnabled &&
+            (userEmail ? (
+              <div className="auth-badge">
+                <span className="auth-email">{userEmail}</span>
+                <button
+                  className="auth-logout"
+                  onClick={onLogoutClick}
+                  title="Ausloggen"
+                  aria-label="Ausloggen"
+                >
+                  ⏻
+                </button>
+              </div>
+            ) : (
+              <button className="auth-login-link" onClick={onLoginClick}>
+                LOGIN
+              </button>
+            ))}
+
           <span className="header-date">{formatToday()}</span>
           {activeTab === 'active' && (
             <button className="btn-add" onClick={onAddClick}>

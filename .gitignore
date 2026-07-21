@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Umgebungsvariablen (Supabase-Zugangsdaten) — niemals committen
+.env
+.env.local
+
+# Persönliche Habit-Backup-Exporte — enthalten echte Nutzerdaten
+Exporte/
+*habit-backup*.json
+
 # Test-Coverage-Reports
 coverage
 

@@ -663,6 +663,143 @@ body {
   font-size: 13px;
 }
 
+/* ── Login-Bildschirm ─────────────────────────────────── */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+}
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  padding: 36px 28px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.login-icon {
+  font-size: 42px;
+  color: var(--accent3);
+  margin-bottom: 12px;
+}
+.login-title {
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.login-text {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text2);
+  margin-bottom: 20px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.login-sent {
+  font-size: 13px;
+  color: var(--success);
+  line-height: 1.6;
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.login-error {
+  font-size: 11px;
+  color: var(--danger);
+  margin-bottom: 14px;
+}
+.login-skip {
+  width: 100%;
+  font-size: 11px;
+}
+
+/* ── Auth-Anzeige im Header ───────────────────────────── */
+.auth-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--text2);
+  letter-spacing: 0.5px;
+}
+.auth-email {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-logout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.auth-logout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.auth-login-link {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--accent3);
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.auth-login-link:hover {
+  background: rgba(234, 88, 12, 0.15);
+}
+
+/* ── Cloud-Sync-Hinweis ───────────────────────────────── */
+.sync-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: color-mix(in srgb, var(--accent3) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent3) 35%, transparent);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+.sync-banner-close {
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.sync-banner-close:hover {
+  color: var(--text);
+}
+
 /* ── Heatmap ──────────────────────────────────────────── */
 .heatmap {
   display: grid;
